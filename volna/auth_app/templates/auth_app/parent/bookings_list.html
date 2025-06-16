@@ -1,0 +1,122 @@
+{% extends 'auth_app/parent/dashboard.html' %}
+
+{% block parent_content %}
+<div class="card">
+    <div class="card-header bg-light">
+        <h4 class="mb-0">Мои бронирования</h4>
+    </div>
+    
+    <div class="card-body">
+        {% if bookings %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Путевка</th>
+                        <th>Ребенок</th>
+                        <th>Дата брони</th>
+                        <th>Статус</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                    <tr>
+                        <td>
+                            <strong>{{ booking.tour.title }}</strong>
+                            <div class="text-muted small">
+                                {{ booking.tour.start_date|date:"d.m.Y" }} - {{ booking.tour.end_date|date:"d.m.Y" }}
+                            </div>
+                        </td>
+                        <td>{{ booking.child.first_name }} {{ booking.child.last_name }}</td>
+                        <td>{{ booking.created_at|date:"d.m.Y H:i" }}</td>
+                        <td>
+                            <span class="badge 
+                                {% if booking.status == 'open' %}bg-primary
+                                {% elif booking.status == 'completed' %}bg-success
+                                {% else %}bg-danger{% endif %}">
+                                {{ booking.get_status_display }}
+                            </span>
+                            {% if booking.status == 'rejected' and booking.rejection_reason %}
+                                <div class="mt-2">
+                                    <strong>Причина:</strong> {{ booking.rejection_reason }}
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-info" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#bookingModal{{ booking.id }}">
+                                <i class="bi bi-info-circle"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <div class="mb-4">
+                <i class="bi bi-calendar-check fs-1 text-muted"></i>
+            </div>
+            <h5 class="text-muted">У вас нет активных бронирований</h5>
+            <p class="text-muted">Выберите путевку и забронируйте отдых для вашего ребенка</p>
+            <a href="{% url 'tour_list' %}" class="btn btn-primary mt-3">
+                <i class="bi bi-search me-1"></i> Выбрать путевку
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% for booking in bookings %}
+<div class="modal fade" id="bookingModal{{ booking.id }}" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Бронирование #{{ booking.id }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <h6>Информация о путевке</h6>
+                    <p><strong>Название:</strong> {{ booking.tour.title }}</p>
+                    <p><strong>Даты:</strong> {{ booking.tour.start_date|date:"d.m.Y" }} - {{ booking.tour.end_date|date:"d.m.Y" }}</p>
+                    <p><strong>Стоимость:</strong> {{ booking.tour.formatted_price }}</p>
+                </div>
+                
+                <div class="mb-3">
+                    <h6>Информация о ребенке</h6>
+                    <p><strong>Имя:</strong> {{ booking.child.first_name }} {{ booking.child.last_name }}</p>
+                    <p><strong>Дата рождения:</strong> {{ booking.child.birth_date|date:"d.m.Y" }}</p>
+                    <p><strong>Возраст:</strong> {{ booking.child.age }} лет</p>
+                </div>
+                
+                <div class="mb-3">
+                    <h6>Статус бронирования</h6>
+                    <p>
+                        <span class="badge 
+                            {% if booking.status == 'open' %}bg-primary
+                            {% elif booking.status == 'completed' %}bg-success
+                            {% else %}bg-danger{% endif %}">
+                            {{ booking.get_status_display }}
+                        </span>
+                    </p>
+                    
+                    {% if booking.status == 'rejected' and booking.rejection_reason %}
+                    <div class="alert alert-danger mt-3">
+                        <h6>Причина отклонения:</h6>
+                        <p>{{ booking.rejection_reason }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

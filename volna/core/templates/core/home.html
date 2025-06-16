@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Герой-секция с фоновым изображением -->
+<section class="hero-section" style="background-image: url('/static/img/hero-bgg.jpg');">
+    <div class="container text-white py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-bold">Детский оздоровительный центр "Волна"</h1>
+                <p class="fs-5">Лучший отдых и развитие для вашего ребёнка</p>
+                <a href="/tours/" class="btn btn-primary btn-lg mt-3">Выбрать путёвку</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- О центре -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Наш центр</h2>
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <img src="{% static 'img/about.jpg' %}" alt="О центре" class="img-fluid rounded">
+            </div>
+            <div class="col-lg-6">
+                <h3>Уникальное место для детей</h3>
+                <p>Наш центр расположен в экологически чистом районе на берегу живописного озера. Мы предлагаем:</p>
+                <ul class="list-unstyled">
+                    <li class="mb-2">✅ Современные корпуса с комфортными номерами</li>
+                    <li class="mb-2">✅ Опытные специалисты и вожатые</li>
+                    <li class="mb-2">✅ Множество программ</li>
+                    <li class="mb-2">✅ С заботой о ваших детях</li>
+                </ul>
+                <a href="/about/" class="btn btn-outline-primary">Подробнее о нас</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Преимущества -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Наши преимущества</h2>
+        <div class="row g-4">
+            {% for item in advantages %}
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-box bg-primary bg-opacity-10 text-primary fs-1 mb-3">
+                            <i class="bi bi-{{ item.icon }}"></i>
+                        </div>
+                        <h3>{{ item.title }}</h3>
+                        <p>{{ item.text }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Акции -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Акции и спецпредложения</h2>
+        <div class="row g-4">
+            {% for promo in promotions %}
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <img src="{% static 'img/{{ promo.image }}' %}" class="card-img-top" alt="{{ promo.title }}">
+                    <div class="card-body">
+                        <h3 class="h4">{{ promo.title }}</h3>
+                        <p>{{ promo.description }}</p>
+                        <a href="/tours/" class="btn btn-sm btn-primary">Выбрать путёвку</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Отзывы -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Отзывы родителей</h2>
+        <div class="row">
+            {% for feedback in feedbacks %}
+            <div class="col-lg-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="d-flex mb-3">
+                            <img src="{% static 'img/{{ feedback.image }}' %}" class="rounded-circle me-3" width="50" alt="Марина">
+                            <div>
+                                <h5 class="mb-0">{{ feedback.name }}</h5>
+                                <small class="text-muted">{{ feedback.title }}</small>
+                            </div>
+                        </div>
+                        <p>{{ feedback.description }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- CTA-секция -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="mb-4">Готовы к незабываемым приключениям?</h2>
+        <p class="lead mb-4">Оставьте заявку и мы подберём идеальную программу для вашего ребенка!</p>
+        <a href="{% url 'contacts' %}" class="btn btn-light btn-lg px-4">Оставить заявку</a>
+    </div>
+</section>
+{% endblock %}

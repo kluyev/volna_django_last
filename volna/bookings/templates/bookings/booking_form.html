@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Бронирование путевки | {{ tour.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card">
+        <div class="card-header bg-light">
+            <h4 class="mb-0">Бронирование путевки</h4>
+        </div>
+        <div class="card-body">
+            <h5>{{ tour.title }}</h5>
+            <p class="text-muted">
+                <i class="bi bi-calendar me-1"></i>
+                {{ tour.start_date|date:"d.m.Y" }} - {{ tour.end_date|date:"d.m.Y" }}
+                ({{ tour.duration }} дней)
+            </p>
+            <p class="price-highlight">{{ tour.formatted_price }}</p>
+            <p class="mb-4">
+                <i class="bi bi-people me-1"></i>
+                Осталось мест: {{ tour.available_seats }}
+            </p>
+            
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label class="form-label">Выберите ребенка</label>
+                    <select name="child" class="form-select" required>
+                        {% for child in children %}
+                        <option value="{{ child.id }}">
+                            {{ child.first_name }} {{ child.last_name }} ({{ child.age }} лет)
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-check-circle me-2"></i> Подтвердить бронирование
+                    </button>
+                    <a href="{% url 'tour_list' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-2"></i> Вернуться к списку путевок
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

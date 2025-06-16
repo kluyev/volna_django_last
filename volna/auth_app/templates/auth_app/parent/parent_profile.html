@@ -1,0 +1,80 @@
+{% extends 'auth_app/parent/dashboard.html' %}
+
+{% block parent_content %}
+<div class="card">
+    <div class="card-header bg-light">
+        <h4 class="mb-0">Основная информация</h4>
+    </div>
+    <div class="card-body">
+        {% if not profile_completed %}
+        <form method="post" novalidate>
+            {% csrf_token %}
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Имя</label>
+                    <input type="text" class="form-control" value="{{ request.user.first_name }}" readonly>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Логин</label>
+                    <input type="text" class="form-control" value="{{ request.user.username }}" readonly>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    {{ form.last_name.label_tag }}
+                    {{ form.last_name }}
+                    {% if form.last_name.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.last_name.errors.0 }}
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    {{ form.phone.label_tag }}
+                    {{ form.phone }}
+                    {% if form.phone.errors %}
+                    <div class="invalid-feedback d-block">
+                        {{ form.phone.errors.0 }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                {{ form.email.label_tag }}
+                {{ form.email }}
+                {% if form.email.errors %}
+                <div class="invalid-feedback d-block">
+                    {{ form.email.errors.0 }}
+                </div>
+                {% endif %}
+            </div>
+            
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save me-1"></i> Сохранить изменения
+            </button>
+        </form>
+        {% else %}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <h5>Основные данные</h5>
+                    <p><strong>Имя:</strong> {{ request.user.first_name }}</p>
+                    <p><strong>Фамилия:</strong> {{ request.user.last_name }}</p>
+                    <p><strong>Логин:</strong> {{ request.user.username }}</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <h5>Контактные данные</h5>
+                    <p><strong>Телефон:</strong> {{ request.user.phone|default:"не указан" }}</p>
+                    <p><strong>Email:</strong> {{ request.user.email|default:"не указан" }}</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

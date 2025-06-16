@@ -1,0 +1,85 @@
+{% extends 'auth_app/staff/dashboard.html' %}
+
+{% block staff_content %}
+<div class="card">
+    <div class="card-header bg-light">
+        <h4 class="mb-0">Изменение статуса бронирования #{{ booking.id }}</h4>
+    </div>
+    
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h5>Информация о бронировании</h5>
+                <p><strong>Путевка:</strong> {{ booking.tour.title }}</p>
+                <p><strong>Родитель:</strong> {{ booking.user.get_full_name }}</p>
+                <p><strong>Ребенок:</strong> {{ booking.child.first_name }} {{ booking.child.last_name }}</p>
+            </div>
+            <div class="col-md-6">
+                <h5>Даты</h5>
+                <p><strong>Дата брони:</strong> {{ booking.created_at|date:"d.m.Y H:i" }}</p>
+                <p><strong>Дата тура:</strong> {{ booking.tour.start_date|date:"d.m.Y" }} - {{ booking.tour.end_date|date:"d.m.Y" }}</p>
+                <p><strong>Статус:</strong> 
+                    <span class="badge 
+                        {% if booking.status == 'open' %}bg-primary
+                        {% elif booking.status == 'completed' %}bg-success
+                        {% else %}bg-danger{% endif %}">
+                        {{ booking.get_status_display }}
+                    </span>
+                </p>
+            </div>
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label">Новый статус</label>
+                <select name="status" id="statusSelect" class="form-select">
+                    {% for value, display in booking.STATUS_CHOICES %}
+                        <option value="{{ value }}" {% if booking.status == value %}selected{% endif %}>
+                            {{ display }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <!-- Поле для причины отклонения (показывается только при выборе "Отклонена") -->
+            <div class="mb-3" id="rejectionReasonField" style="display: none;">
+                <label class="form-label">Причина отклонения *</label>
+                <textarea name="rejection_reason" class="form-control" rows="3" 
+                          placeholder="Укажите причину отклонения бронирования">{{ booking.rejection_reason }}</textarea>
+                <div class="form-text">Этот комментарий будет виден родителю</div>
+            </div>
+            
+            <div class="d-flex justify-content-end">
+                <a href="{% url 'staff_bookings' %}" class="btn btn-outline-secondary me-2">
+                    Отмена
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    Сохранить изменения
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const statusSelect = document.getElementById('statusSelect');
+    const reasonField = document.getElementById('rejectionReasonField');
+    
+    function toggleRejectionReason() {
+        if (statusSelect.value === 'rejected') {
+            reasonField.style.display = 'block';
+        } else {
+            reasonField.style.display = 'none';
+        }
+    }
+    
+    // Инициализация при загрузке
+    toggleRejectionReason();
+    
+    // Обработчик изменения статуса
+    statusSelect.addEventListener('change', toggleRejectionReason);
+});
+</script>
+{% endblock %}

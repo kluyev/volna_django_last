@@ -1,0 +1,180 @@
+.hero-section {
+    background-size: cover;
+    background-position: center;
+    min-height: 60vh;
+    max-height: 60vh;
+    display: flex;
+    align-items: center;
+}
+
+.icon-box {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+/* Анимации */
+.card:hover {
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: 50vh;
+        text-align: center;
+    }
+}
+
+/* Стили для страницы "О нас" */
+.timeline {
+    position: relative;
+    padding-left: 50px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    background: #42a5f5;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.timeline-year {
+    position: absolute;
+    left: -50px;
+    top: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #42a5f5;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.achievements-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.achievements-list li {
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 15px;
+}
+
+.achievements-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: #42a5f5;
+    font-weight: bold;
+}
+
+.team-quote {
+    border-left: 3px solid #42a5f5;
+    padding-left: 15px;
+}
+
+/* Стили для форм */
+.card {
+    border-radius: 12px;
+}
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.form-control {
+    padding: 0.75rem 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+}
+
+.form-control:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
+}
+
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875em;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .border-end {
+        border-right: none !important;
+        padding-right: 0 !important;
+    }
+    .ps-md-3 {
+        padding-left: 0 !important;
+    }
+}
+
+/* Кастомные стили ошибок */
+.errorlist {
+    list-style: none;
+    padding-left: 0;
+    color: #dc3545;
+    font-size: 0.875em;
+    margin-top: 0.25rem;
+}
+
+.is-invalid {
+    border-color: #dc3545 !important;
+    background-image: url("data:image/svg+xml,%3csvg...");
+}
+
+.form-control:focus.is-invalid {
+    box-shadow: 0 0 0 0.25rem rgba(220,53,69,.25);
+}
+
+/* Контакты */
+.contact-icon {
+    font-size: 1.5rem;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: rgba(66, 165, 245, 0.1);
+    color: #42a5f5;
+}
+
+/* Форма обратной связи */
+.contact-form .form-control {
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.contact-form .form-label {
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+/* Карта */
+.map-container {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+

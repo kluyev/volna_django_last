@@ -1,0 +1,65 @@
+{% extends 'auth_app/staff/dashboard.html' %}
+
+{% block staff_content %}
+<div class="card">
+    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Бронирования путевок</h4>
+        <span class="badge bg-primary">{{ bookings.count }}</span>
+    </div>
+    
+    <div class="card-body">
+        {% if bookings %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Путевка</th>
+                        <th>Родитель</th>
+                        <th>Ребенок</th>
+                        <th>Дата</th>
+                        <th>Статус</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                    <tr>
+                        <td>#{{ booking.id }}</td>
+                        <td>
+                            <strong>{{ booking.tour.title }}</strong>
+                            <div class="text-muted small">
+                                {{ booking.tour.start_date|date:"d.m.Y" }} - {{ booking.tour.end_date|date:"d.m.Y" }}
+                            </div>
+                        </td>
+                        <td>{{ booking.user.get_full_name }}</td>
+                        <td>{{ booking.child.first_name }} {{ booking.child.last_name }}</td>
+                        <td>{{ booking.created_at|date:"d.m.Y H:i" }}</td>
+                        <td>
+                            <span class="badge 
+                                {% if booking.status == 'open' %}bg-primary
+                                {% elif booking.status == 'completed' %}bg-success
+                                {% else %}bg-danger{% endif %}">
+                                {{ booking.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'update_booking_status' booking.id %}" 
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i> Изменить
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-calendar-x fs-1 text-muted"></i>
+            <p class="text-muted mt-3">Нет активных бронирований</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

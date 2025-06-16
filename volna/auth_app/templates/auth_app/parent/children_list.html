@@ -1,0 +1,163 @@
+{% extends 'auth_app/parent/dashboard.html' %}
+
+{% block parent_content %}
+<div class="card">
+    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">Мои дети</h4>
+        {% if not show_form %}
+        <a href="?add_child=true" class="btn btn-sm btn-primary">
+            <i class="bi bi-plus-circle me-1"></i> Добавить ребенка
+        </a>
+        {% endif %}
+    </div>
+    
+    <div class="card-body">
+        {% if show_form %}
+        <div class="border p-4 rounded mb-4">
+            <h5 class="mb-3">Добавление ребенка</h5>
+            <form method="post" action="{% url 'children_list' %}">
+                {% csrf_token %}
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        {{ form.first_name.label_tag }}
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.first_name.errors.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form.last_name.label_tag }}
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.last_name.errors.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        {{ form.gender.label_tag }}
+                        {{ form.gender }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form.birth_date.label_tag }}
+                        {{ form.birth_date }}
+                        {% if form.birth_date.errors %}
+                        <div class="invalid-feedback d-block">
+                            {{ form.birth_date.errors.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    {{ form.special_needs.label_tag }}
+                    {{ form.special_needs }}
+                </div>
+                
+                <div class="d-flex justify-content-end">
+                    <a href="{% url 'children_list' %}" class="btn btn-outline-secondary me-2">
+                        Отмена
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-save me-1"></i> Сохранить
+                    </button>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+        
+        {% if children.exists %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Имя</th>
+                        <th>Дата рождения</th>
+                        <th>Возраст</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for child in children %}
+                    <tr>
+                        <td>
+                            <strong>{{ child.first_name }} {{ child.last_name }}</strong>
+                            <div class="text-muted small">
+                                Пол: {{ child.get_gender_display }}
+                            </div>
+                        </td>
+                        <td>{{ child.birth_date|date:"d.m.Y" }}</td>
+                        <td>{{ child.age }} лет</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-info me-1" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#childModal{{ child.id }}">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            <form method="post" 
+                                  action="{% url 'delete_child' child.id %}" 
+                                  class="d-inline"
+                                  onsubmit="return confirm('Удалить ребенка из профиля?')">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% else %}
+        <div class="text-center py-5">
+            <div class="mb-4">
+                <i class="bi bi-people fs-1 text-muted"></i>
+            </div>
+            <h5 class="text-muted">Вы еще не добавили ни одного ребенка</h5>
+            <p class="text-muted">Добавьте информацию о вашем ребенке для удобного бронирования путевок</p>
+            <a href="?add_child=true" class="btn btn-primary mt-3">
+                <i class="bi bi-plus-circle me-1"></i> Добавить ребенка
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% for child in children %}
+<!-- Модальное окно с подробной информацией -->
+<div class="modal fade" id="childModal{{ child.id }}" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ child.first_name }} {{ child.last_name }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <h6>Основная информация</h6>
+                    <p><strong>Дата рождения:</strong> {{ child.birth_date|date:"d.m.Y" }}</p>
+                    <p><strong>Возраст:</strong> {{ child.age }} лет</p>
+                    <p><strong>Пол:</strong> {{ child.get_gender_display }}</p>
+                </div>
+                {% if child.special_needs %}
+                <div class="mb-3">
+                    <h6>Особенности здоровья</h6>
+                    <p>{{ child.special_needs }}</p>
+                </div>
+                {% endif %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

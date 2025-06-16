@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Контакты | Детский центр "Волна"{% endblock %}
+
+{% block content %}
+<!-- Герой-секция -->
+<section class="hero-section" style="background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/static/img/about-bg.jpg');">
+    <div class="container text-white text-center py-5">
+        <h1 class="display-4 fw-bold mb-4">Контакты</h1>
+        <p class="fs-5">Свяжитесь с нами любым удобным способом</p>
+    </div>
+</section>
+
+<!-- Основное содержимое -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Контактная информация -->
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <h2 class="mb-4">Как записать ребенка на путевку</h2>
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body">
+                        <p class="text-muted">Инструкция по записи появится здесь в ближайшее время.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Форма обратной связи -->
+            <div class="col-lg-6">
+                <h2 class="mb-4">Наши контакты</h2>
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li class="mb-3">
+                                <i class="bi bi-geo-alt-fill text-primary me-2"></i>
+                                <strong>Адрес:</strong> г. Владивосток, ул. Шпеткова, 60
+                            </li>
+                            <li class="mb-3">
+                                <i class="bi bi-telephone-fill text-primary me-2"></i>
+                                <strong>Телефон:</strong> +7 (123) 456-78-90
+                            </li>
+                            <li class="mb-3">
+                                <i class="bi bi-envelope-fill text-primary me-2"></i>
+                                <strong>Email:</strong> info@volna-center.ru
+                            </li>
+                            <li>
+                                <i class="bi bi-clock-fill text-primary me-2"></i>
+                                <strong>Режим работы:</strong> Пн-Пт: 9:00 - 20:00, Сб: 9:00 - 18:00
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4 p-sm-5">
+                        <h2 class="text-center mb-4">Остались вопросы?</h2>
+                        <p class="text-center mb-4">Оставьте заявку и мы с вами свяжемся</p>
+                        
+                        <form method="post" action="{% url 'contacts' %}">
+                            {% csrf_token %}
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Ваше имя</label>
+                                <input type="text" name="name" class="form-control" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Номер телефона</label>
+                                <input type="tel" name="phone" class="form-control" required>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" class="form-control" required>
+                            </div>
+                            
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    Отправить заявку
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Карта -->
+                <div class="card border-0 shadow-sm mt-4">
+                    <div class="card-body p-0">
+                        <iframe 
+                            src="https://yandex.ru/map-widget/v1/?um=constructor%3Ae1789bb98fee87f2a6019a43558545c6748a43edb322fc73efdcff84665833e7&amp;source=constructor" 
+                            width="100%" 
+                            height="400" 
+                            frameborder="0"
+                            style="border:0; border-radius: 8px;"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
